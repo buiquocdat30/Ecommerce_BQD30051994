@@ -12,7 +12,7 @@ const AddProduct = () => {
     new_price: "",
     old_price: "",
   });
-  //lấy url của ảnh
+  //lấy url của ảnh, hiển thị tạm ảnh trước khi upload
   const imageHandler = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -21,9 +21,51 @@ const AddProduct = () => {
       setImage(file);
     }
   };
-
+  //Cập nhật giá trị của từng input khi người dùng nhập dữ liệu vào form. Dùng name của input để cập nhật đúng key trong productDetails.
   const changeHandler = (e) => {
-    setProductDetails({ ...productDetails, [e.target.name]: e.target.value });
+    setProductDetails((productDetails) => ({
+      ...productDetails,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  //up ảnh lên server và nhận lại đường dẫn ảnh, sau đó cập nhật image và gửi dữ liệu đầy đủ sản phẩm lên server
+  const Add_Product = async () => {
+    console.log(productDetails);
+    let responseData;
+    let product = productDetails;
+
+    let formData = new FormData();
+    formData.append("product", image);
+
+    await fetch("http://localhost:4000/upload", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body: formData,
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        responseData = data;
+      });
+
+      if(responseData.success)
+      {
+        product.image=responseData.image_url;
+        console.log(product)
+        await fetch('http://localhost:4000/addproduct',{
+          method:'POST',
+          headers:{
+            Accept:'application/json',
+            'Content-Type':'application/json',
+          },
+          body:JSON.stringify(product),
+        })
+        .then((resp)=>resp.json())
+        .then((data)=>{
+          data.success?alert("Product Added"):alert("Failed")
+        })
+      }
   };
 
   return (
@@ -45,7 +87,7 @@ const AddProduct = () => {
             value={productDetails.old_price}
             onChange={changeHandler}
             type="text"
-            name="old_name"
+            name="old_price"
             placeholder="Type here"
           />
         </div>
@@ -55,7 +97,7 @@ const AddProduct = () => {
             value={productDetails.new_price}
             onChange={changeHandler}
             type="text"
-            name="new_name"
+            name="new_price"
             placeholder="Type here"
           />
         </div>
@@ -90,7 +132,9 @@ const AddProduct = () => {
           hidden
         />
       </div>
-      <button className="addproduct-btn">ADD</button>
+      <button onClick={Add_Product} className="addproduct-btn">
+        ADD
+      </button>
     </div>
   );
 };
