@@ -7,6 +7,7 @@ const multer = require("multer");
 const path = require("path");
 
 const cors = require("cors");
+const { error } = require("console");
 
 app.use(express.json());
 app.use(cors());
@@ -151,34 +152,60 @@ app.get("/allproducts", async (req, res) => {
   }
 });
 
-
 // Shema creating for User model
-const Users =mongoose.model('Users',{
-  name:{
-    type:String
+const Users = mongoose.model("Users", {
+  name: {
+    type: String,
   },
-  email:{
-    type:String,
-    unique:true
+  email: {
+    type: String,
+    unique: true,
   },
-  password:{
-    type:String,
-
+  password: {
+    type: String,
   },
-  cartData:{
-    type:Object
+  cartData: {
+    type: Object,
   },
-  date:{
-    type:Date,
-    default:Date.now
-  }
-})
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
 // Creating Endpoint for registering the User
-app.post('/singup', async (req,res)=>{
+app.post("/singup", async (req, res) => {
+  let check = await Users.findOne({ email: req.body.email });
+  if (check) {
+    return res
+      .status(400)
+      .json({
+        success: false,
+        error: "existing user found with same email address",
+      });
+  }
+  let cart = {};
+  for (let i = 0; i < 300; i++) {
+    cart[i] = 0;
+  }
+  const user=new Users({
+    name:req.body.username,
+    email:req.body.email,
+    password:req.body.password,
+    cartData:cart,
+  })
 
-  let check=await Users.findOne({email:rq.body.email})
-})
+  await user.save();
+
+  const data={
+    user:{
+      id:user.id
+    }
+  }
+
+  const token= jwt.sign(data,'secret_ecom');
+  res.json({success:true,token})
+});
 
 app.listen(port, (error) => {
   if (!error) {
