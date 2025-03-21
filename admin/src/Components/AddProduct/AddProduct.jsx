@@ -5,13 +5,14 @@ import upload_area from "../../assets/upload_area.svg";
 const AddProduct = () => {
   const [image, setImage] = useState(false);
 
-  const [productDetails, setProductDetails] = useState({
+  const details = {
     name: "",
     image: "",
     category: "women",
     new_price: "",
     old_price: "",
-  });
+  };
+  const [productDetails, setProductDetails] = useState(details);
   //lấy url của ảnh, hiển thị tạm ảnh trước khi upload
   const imageHandler = (e) => {
     const file = e.target.files[0];
@@ -49,23 +50,30 @@ const AddProduct = () => {
         responseData = data;
       });
 
-      if(responseData.success)
-      {
-        product.image=responseData.image_url;
-        console.log(product)
-        await fetch('http://localhost:4000/addproduct',{
-          method:'POST',
-          headers:{
-            Accept:'application/json',
-            'Content-Type':'application/json',
-          },
-          body:JSON.stringify(product),
-        })
-        .then((resp)=>resp.json())
-        .then((data)=>{
-          data.success?alert("Product Added"):alert("Failed")
-        })
-      }
+    if (responseData.success) {
+      product.image = responseData.image_url;
+      console.log(product);
+      await fetch("http://localhost:4000/addproduct", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Product Added");
+            //xoá dữ liệu ô nhập và Reset form về trạng thái ban đầu
+            setProductDetails(details)
+            //xoá url ảnh
+            setImage(false)
+          } else {
+            alert("Failed");
+          }
+        });
+    }
   };
 
   return (

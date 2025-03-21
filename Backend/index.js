@@ -151,6 +151,35 @@ app.get("/allproducts", async (req, res) => {
   }
 });
 
+
+// Shema creating for User model
+const Users =mongoose.model('Users',{
+  name:{
+    type:String
+  },
+  email:{
+    type:String,
+    unique:true
+  },
+  password:{
+    type:String,
+
+  },
+  cartData:{
+    type:Object
+  },
+  date:{
+    type:Date,
+    default:Date.now
+  }
+})
+
+// Creating Endpoint for registering the User
+app.post('/singup', async (req,res)=>{
+
+  let check=await Users.findOne({email:rq.body.email})
+})
+
 app.listen(port, (error) => {
   if (!error) {
     console.log("Server running on port: " + port);
