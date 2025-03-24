@@ -7,12 +7,12 @@
 
 .loginsignup-container {
     width: 580px;
-    /* height: 700px; */
     background: white;
     margin: auto;
     padding: 40px 60px;
     display: flex;
     flex-direction: column;
+    border-radius: 6px;
 }
 
 .loginsignup-container h1 {
@@ -20,7 +20,7 @@
     text-align: center;
 }
 
-.loginsignup-container button{
+.loginsignup-container button {
     width: 100%;
     height: 72px;
     color: white;
@@ -32,18 +32,35 @@
     cursor: pointer;
 }
 
-.loginsignup-fields {
+.loginsignup-fields-container {
     display: flex;
     flex-direction: column;
     gap: 29px;
     margin-top: 30px;
 }
 
+.loginsignup-container button {
+    border-radius: 6px;
+}
+
+.loginsignup-fields {
+    display: flex;
+    align-items: center;
+}
+
+.loginsignup-fields .field-icon {
+    height: 24px;
+    width: 24px;
+    margin-right: 10px;
+}
+
+
 .loginsignup-fields input {
     height: 72px;
     width: 100%;
     padding-left: 20px;
     border: 1px solid #c9c9c9;
+    border-radius: 6px;
     outline: none;
     color: #5c5c5c;
     font-size: 18px;
@@ -56,7 +73,8 @@
     font-weight: 500;
 }
 
-.loginsignup-login span{
+.loginsignup-login .click-span {
+    cursor: pointer;
     color: #ff4141;
     font-weight: 600;
 }
@@ -70,6 +88,30 @@
     font-size: 18px;
     font-weight: 500;
 }
+
+.loginsignup-social-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 30px;
+}
+
+.loginsignup-icons-container {
+    padding: 10px;
+    padding-bottom: 6px;
+    background: #fbfbfb;
+    border: 1px solid #ebebeb;
+    cursor: pointer;
+}
+.loginsignup-icons-container:hover{
+    background-color: #fce3fe;
+}
+.loginsignup-icons-container img{
+    height: 31px;
+    width: 31px;
+}
+
 @media (max-width: 1280px) {
     .loginsignup-container {
         width: 500px;
