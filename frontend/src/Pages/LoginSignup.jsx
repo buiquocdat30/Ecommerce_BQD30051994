@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
   faEnvelopeOpen,
   faLock,
+  faEye,
+  faEyeLowVision,
 } from "@fortawesome/free-solid-svg-icons";
 import instagram_icon from "../Components/Assets/instagram_icon.png";
 import pintester_icon from "../Components/Assets/pintester_icon.png";
@@ -18,12 +20,40 @@ const LoginSignup = () => {
 
   const dataDetails = { username: "", password: "", email: "" };
   const [formData, setFormData] = useState(dataDetails);
+  const [showPassword, setShowPassword] = useState(false);
+  useEffect(() => {
+    setShowPassword(false);
+  }, [formData, state]);
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const login = async () => {
-    console.log("Login Function Executed", formData);
+    try {
+      console.log("Login Function Executed", formData);
+      let responseData;
+      await fetch("http://localhost:4000/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/form-data",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => (responseData = data));
+
+      if (responseData.success) {
+        localStorage.setItem("auth-token", responseData.token);
+        window.location.replace("/");
+      } else {
+        alert(responseData.error);
+        setFormData((prev) => ({ ...prev, password: "" }));
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+      alert("Something went wrong! Please try again.");
+    }
   };
 
   const signup = async () => {
@@ -44,6 +74,8 @@ const LoginSignup = () => {
       if (responseData.success) {
         localStorage.setItem("auth-token", responseData.token);
         window.location.replace("/");
+      } else {
+        alert(responseData.error);
       }
     } catch (error) {
       console.error("Error during signup:", error);
@@ -86,8 +118,13 @@ const LoginSignup = () => {
               name="password"
               value={formData.password}
               onChange={changeHandler}
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Your Password"
+            />
+            <FontAwesomeIcon
+              className="show-icon"
+              icon={showPassword ? faEyeLowVision : faEye}
+              onClick={() => setShowPassword((prev) => !prev)}
             />
           </div>
         </div>

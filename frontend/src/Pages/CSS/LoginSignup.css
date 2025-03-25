@@ -46,6 +46,7 @@
 .loginsignup-fields {
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .loginsignup-fields .field-icon {
@@ -64,6 +65,13 @@
     outline: none;
     color: #5c5c5c;
     font-size: 18px;
+}
+.loginsignup-fields .show-icon{
+    position: absolute;
+    top:12px;
+    right: 0;
+    cursor: pointer;
+    padding: 10px;
 }
 
 .loginsignup-login {
