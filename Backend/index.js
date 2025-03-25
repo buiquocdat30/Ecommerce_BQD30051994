@@ -228,6 +228,19 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//creating endpoint for newcollection Database
+app.get('/newcollections', async (req,res)=>{
+  try {
+    let products = await Product.find({}); // Kiểm tra xem có dữ liệu không
+    let newcollection = products.slice(1).slice(-8);
+    console.log("Newcollection Fetched");
+    res.status(200).json(newcollection);
+  } catch (error) {
+    console.error("Error fetching new collections:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+})
+
 app.listen(port, (error) => {
   if (!error) {
     console.log("Server running on port: " + port);
