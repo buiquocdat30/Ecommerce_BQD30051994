@@ -42,7 +42,7 @@ const LoginSignup = () => {
 
       if (responseData.success) {
         localStorage.setItem("auth-token", responseData.token);
-        window.location.href("/");
+        window.location.replace("/");
       } else {
         alert(responseData.error);
         setFormData((prev) => ({ ...prev, password: "" }));
