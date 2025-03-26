@@ -16,6 +16,7 @@
     color: #454545;
     font-size: 55px;
     font-weight: 600;
+    text-align: center;
 }
 
 .newletter p {
@@ -27,7 +28,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+
     background: white;
     width: 730px;
     height: 70px;
@@ -50,7 +51,7 @@
     width: 210px;
     height: 70px;
     border-radius: 80px;
-    position: absolute;
+    
     background: black;
     color: white;
     font-size: 16px;
@@ -63,6 +64,7 @@
     }
     .newletter h1 {
         font-size: 50px;
+        text-align: center;
     }
     .newletter div {
         width: 650px;
@@ -76,6 +78,7 @@
     }
     .newletter h1 {
         font-size: 45px;
+        text-align: center;
     }
     .newletter div {
         width: 550px;
@@ -94,9 +97,10 @@
         padding: 0 20px;
     }
     .newletter h1 {
-        font-size: 40px;
+        font-size: 36px;
     }
     .newletter div {
+        position: relative;
         width: 100%;
         height: 60px;
         padding: 10px;
@@ -105,6 +109,7 @@
         width: 100%;
     }
     .newletter div button {
+        position: absolute;
         width: 30%;
         height: 60px;
         font-size: 14px;

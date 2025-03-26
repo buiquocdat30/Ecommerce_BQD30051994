@@ -21,9 +21,6 @@ const LoginSignup = () => {
   const dataDetails = { username: "", password: "", email: "" };
   const [formData, setFormData] = useState(dataDetails);
   const [showPassword, setShowPassword] = useState(false);
-  useEffect(() => {
-    setShowPassword(false);
-  }, [formData, state]);
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,7 +42,7 @@ const LoginSignup = () => {
 
       if (responseData.success) {
         localStorage.setItem("auth-token", responseData.token);
-        window.location.replace("/");
+        window.location.href("/");
       } else {
         alert(responseData.error);
         setFormData((prev) => ({ ...prev, password: "" }));

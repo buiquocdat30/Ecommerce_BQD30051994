@@ -218,18 +218,16 @@ app.post("/login", async (req, res) => {
       };
       const token = jwt.sign(data, "secret_ecom");
       res.json({ success: true, token });
+    } else {
+      res.json({ success: false, error: "Wrong Password" });
     }
-    else{
-      res.json({ success: false, error:"Wrong Password" })
-    }
-  }
-  else{
-    res.json({ success: false, error:"Wrong Email Id" })
+  } else {
+    res.json({ success: false, error: "Wrong Email Id" });
   }
 });
 
 //creating endpoint for newcollection Database
-app.get('/newcollections', async (req,res)=>{
+app.get("/newcollections", async (req, res) => {
   try {
     let products = await Product.find({}); // Kiểm tra xem có dữ liệu không
     let newcollection = products.slice(1).slice(-8);
@@ -239,7 +237,28 @@ app.get('/newcollections', async (req,res)=>{
     console.error("Error fetching new collections:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
+});
+
+// creating endpoint for pupular in women section
+app.get("/popularinwomen", async (req, res) => {
+  try {
+    let products = await Product.find({ category: "women" });
+    let popular_in_women = products.slice(0, 4);
+    console.log("Popular in women fetched");
+    res.send(popular_in_women);
+  } catch (error) {
+    console.error("Error fetching Popular in women:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+//creating endpoint for adding products in cartData
+app.post('/addtocart',async (req, res)=>{
+  console.log(req.body)
 })
+
+
+
 
 app.listen(port, (error) => {
   if (!error) {

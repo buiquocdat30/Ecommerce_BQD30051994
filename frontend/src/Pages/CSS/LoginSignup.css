@@ -68,7 +68,7 @@
 }
 .loginsignup-fields .show-icon{
     position: absolute;
-    top:12px;
+    top:1.125rem;
     right: 0;
     cursor: pointer;
     padding: 10px;
@@ -158,6 +158,10 @@
     .loginsignup-container button {
         height: 60px;
         font-size: 18px;
+    }
+    .loginsignup-fields .show-icon{
+        top:0.9rem;
+        right: 0;
     }
 
     .loginsignup-login,

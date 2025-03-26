@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext";
 import "./Navbar.css";
 import logo from "../Assets/logo.png";
@@ -10,7 +10,7 @@ const Navbar = () => {
   const [menu, setMenu] = useState("shop");
   const { getTotalCartItems } = useContext(ShopContext);
   const menuRef = useRef();
-
+  const navigate = useNavigate();
   const dropdown_toggle = (e) => {
     if (!menuRef.current) return;
     menuRef.current.classList.toggle("nav-menu-visible");
@@ -19,7 +19,13 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
-      <div className="nav-logo">
+      <div
+        className="nav-logo"
+        onClick={() => {
+          setMenu("shop");
+          navigate("/");
+        }}
+      >
         <img src={logo} alt="" />
         <p>SHOPPER</p>
       </div>
