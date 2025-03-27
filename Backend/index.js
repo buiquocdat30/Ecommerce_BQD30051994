@@ -272,16 +272,92 @@ const fetchUser = async (req, res, next) => {
 
 //creating endpoint for adding products in cartData
 app.post("/addtocart", fetchUser, async (req, res) => {
-  console.log(req.body, req.user);
+  try {
+    // Kiểm tra xem itemId có tồn tại trong request hay không
+    const { itemId } = req.body;
+    if (!itemId) {
+      return res.status(400).json({ error: "itemId is required" });
+    }
 
-  let userData = await Users.findOne({ _id: req.user.id });
-  userData.cartData[req.body.itemId] =(userData.cartData[req.body.itemId] || 0) + 1;
-  await Users.findOneAndUpdate(
-    { _id: req.user.id },
-    { cartData: userData.cartData }
-  );
-  res.send("Added")
+    // Tìm user trong database
+    let userData = await Users.findById(req.user.id);
+    if (!userData) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    // Đảm bảo cartData luôn tồn tại
+    if (!userData.cartData) {
+      userData.cartData = {};
+    }
+    userData.cartData[req.body.itemId] =
+      (userData.cartData[req.body.itemId] || 0) + 1;
+
+    // Đánh dấu cartData đã thay đổi để Mongoose lưu lại
+    userData.markModified("cartData");
+    // Lưu dữ liệu vào database
+    await userData.save();
+
+    res.json({
+      message: "Item added to cart successfully",
+      cartData: userData.cartData,
+    });
+    console.log("added", req.body.itemId);
+  } catch (error) {
+    console.error("Error in /addtocart:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
+
+//creating endpoint to remove product from cartData
+app.post("/removefromcart", fetchUser, async (req, res) => {
+  try {
+    // Kiểm tra xem itemId có tồn tại trong request hay không
+    const { itemId } = req.body;
+    if (!itemId) {
+      return res.status(400).json({ error: "itemId is required" });
+    }
+
+    // Tìm user trong database
+    let userData = await Users.findById(req.user.id);
+    if (!userData) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    // Đảm bảo cartData luôn tồn tại
+    if (!userData.cartData) {
+      userData.cartData = {};
+    }
+
+    // Kiểm tra xem sản phẩm có trong giỏ hàng không
+    if (!userData.cartData[itemId]) {
+      return res.status(400).json({ error: "Item not found in cart" });
+    }
+
+    if (userData.cartData[itemId] > 1) {
+      userData.cartData[itemId] -= 1;
+    } else {
+      // Nếu số lượng = 1, xóa luôn sản phẩm khỏi giỏ hàng
+      delete userData.cartData[itemId];
+    }
+    // Đánh dấu cartData đã thay đổi để Mongoose lưu lại
+    userData.markModified("cartData");
+    // Lưu dữ liệu vào database
+    await userData.save();
+    console.log("removed", req.body.itemId);
+    res.json({
+      message: "Item removed to cart successfully",
+      cartData: userData.cartData,
+    });
+  } catch (error) {
+    console.error("Error in /removefromcart:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//creating endpoint to get cartdata
+app.get('/getcart',fetchUser, async (req, res)=>{
+  console.log("getcart");
+  let userData =await Users.findById(req.user.id)
+  res.json(userData.cartData)
+})
 
 app.listen(port, (error) => {
   if (!error) {
